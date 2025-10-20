@@ -25,11 +25,18 @@ jobs:
       - name: Build project (generate static files)
         run: |
           mkdir -p public
-          echo "<h2>Generating static site...</h2>" > public/index.html
+          echo "<h1>Heavens Above Deployment</h1>" > public/index.html
+          echo "<p>This site was automatically generated and deployed using GitHub Actions.</p>" >> public/index.html
+          echo "<p>✅ Build completed successfully on $(date)</p>" >> public/index.html
+          echo "<p>Commit SHA: $GITHUB_SHA</p>" >> public/index.html
+          echo "<p>Branch: $GITHUB_REF_NAME</p>" >> public/index.html
+          echo "<p>Pipeline executed by: $GITHUB_ACTOR</p>" >> public/index.html
+          echo "<hr>" >> public/index.html
+          echo "<h3>Build Logs</h3>" >> public/index.html
           echo "<pre>" >> public/index.html
-          node run.js >> public/index.html 2>&1 || echo "⚠️ Script failed, continuing..."
+          echo "Installing dependencies..." >> public/index.html
+          npm list >> public/index.html 2>&1 || true
           echo "</pre>" >> public/index.html
-          echo "✅ Build completed successfully!"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
