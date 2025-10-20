@@ -1,0 +1,14 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # Every Monday 2 AM
+  workflow_dispatch:
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Dependabot Metadata
+      uses: dependabot/fetch-metadata@v1
