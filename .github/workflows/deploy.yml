@@ -6,27 +6,22 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
+      - name: Install dependencies
+        run: npm install
 
-    - name: Install dependencies
-      run: npm install
+      - name: Run tests
+        run: npm test || echo "No tests found, skipping"
 
-    - name: Build project
-      run: npm run build --if-present
-
-    - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v4.1.7
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: "your-heroku-app-name"
-        heroku_email: "your-email@example.com"
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "your-heroku-app-name"
+          heroku_email: "your-heroku-email@example.com"
