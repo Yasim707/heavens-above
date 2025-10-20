@@ -1,17 +1,27 @@
-name: Scheduled Maintenance
+name: Scheduled Maintenance Tasks
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight UTC
-  workflow_dispatch: # allows manual run
+    - cron: '0 2 * * 0' # Every Sunday at 2 AM
+  workflow_dispatch:
 
 jobs:
   maintenance:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Run maintenance script
-      run: echo "Running daily maintenance tasks..."
+      - name: Run maintenance script
+        run: |
+          echo "🧹 Running scheduled maintenance..."
+          echo "Clearing temporary files..."
+          echo "Generating backup timestamp: $(date)" > maintenance-log.txt
+          cat maintenance-log.txt
+
+      - name: Upload maintenance log
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-log
+          path: maintenance-log.txt
