@@ -1,20 +1,21 @@
-name: Deploy to GitHub Pages
+name: Deploy Docs to Vercel
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs-deploy.yml"
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy-docs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -22,24 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project (generate static files)
-        run: |
-          mkdir -p public
-          echo "<h1>Heavens Above Deployment</h1>" > public/index.html
-          echo "<p>This site was automatically generated and deployed using GitHub Actions.</p>" >> public/index.html
-          echo "<p>✅ Build completed successfully on $(date)</p>" >> public/index.html
-          echo "<p>Commit SHA: $GITHUB_SHA</p>" >> public/index.html
-          echo "<p>Branch: $GITHUB_REF_NAME</p>" >> public/index.html
-          echo "<p>Pipeline executed by: $GITHUB_ACTOR</p>" >> public/index.html
-          echo "<hr>" >> public/index.html
-          echo "<h3>Build Logs</h3>" >> public/index.html
-          echo "<pre>" >> public/index.html
-          echo "Installing dependencies..." >> public/index.html
-          npm list >> public/index.html 2>&1 || true
-          echo "</pre>" >> public/index.html
+      - name: Build docs
+        run: npm run docs:build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
