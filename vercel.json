@@ -2,9 +2,9 @@
   "version": 2,
   "public": true,
   "builds": [
-    { "src": "docs-dist/**/*", "use": "@vercel/static" }
+    { "src": "public/**/*", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/docs-dist/$1" }
+    { "src": "/(.*)", "dest": "public/index.html" }
   ]
 }
